@@ -1,0 +1,11 @@
+#container {
+	background-image: url("img/board-bg.png");
+	background-repeat: no-repeat;
+	width:600px;
+	height:800px;
+	margin: 20px auto;
+}
+body {
+	margin: 0 auto;
+	background-color: #D2E6E1;
+}
