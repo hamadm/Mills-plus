@@ -1,12 +1,13 @@
 
     //Settings
     //postions of the original place of the picecs in the start of the game
-    //postions of the original place of the pieces in the start of the game
     var originalXPosW = 555
     var originalYPosW = 700
     var originalXPosB = 45
     var originalYPosB = 700
-
+    
+    // setting who to start
+    turn = "Black";
 
     // intinalizing the stage
     var stage = new Kinetic.Stage({
@@ -133,7 +134,10 @@
 
 
     var piecesLayer = new Kinetic.Layer();
-    
+
+    //groups that has the piceses that are not in the board yet (stat= filling_board)
+    var groupB = [];
+    var groupW = [];
     for(var i=0 ; i<9 ;i++){
         var c = new Kinetic.Circle ({
         x: originalXPosB,
@@ -143,6 +147,7 @@
         draggable: true,
         name: 'Black'
         });
+        groupB.push(c);
         piecesLayer.add(c);
 
       } 
@@ -156,11 +161,12 @@
         draggable: true,
         name: 'White'
         });
+        groupW.push(c);
         piecesLayer.add(c);
+        
       } 
       
       // checking if reched outline or not to snap
-      // checking if reached outline or not to snap
       function isNearOutline(circle, outline) {
         var a = circle;
         var o = outline;
@@ -173,6 +179,8 @@
           return false;
         }
       }
+        
+
         piecesLayer.on('dragstart', function(evt) {
             var piece = evt.target;
             piece.moveToTop();
@@ -180,6 +188,7 @@
         });
         piecesLayer.on('dragend', function(evt) {
             var piece = evt.target;
+            
             for(var key in outlines)
             {
               var outline = outlines[key];
@@ -188,12 +197,18 @@
                 piece.draw();
                 piece.inRightPlace = true; //Piece is put in the board(to check later if it's not then return it to original place)
                 outline.filled = true;
-                outline.fill_color = piece.name();
-                checkFields();
+                updateLogic(key,piece.name());
+                changeTurn();
                 setTimeout(function() {
-                
-                if(state == filling_board_state) piece.setDraggable(false);
+                    if(piece.name() == "Black"){
+                        groupB.pop(piece);
+                    }
+                    else{
+                        groupW.pop(piece);
+                    }
+                    piece.setDraggable(false);
                 }, 50);
+                break;
               }
             }
             // returning the piece to its original place if 
@@ -202,7 +217,41 @@
               }
             piecesLayer.draw();
         });
-      
+
+
+    function changeTurn(){
+        if(turn == "Black"){
+            for(var k in groupB)
+                {
+                    var o = groupB[k];
+                    o.setDraggable(false);
+                }
+            for(var k in groupW)
+                {
+                    var o = groupW[k];
+                    o.setDraggable(true);
+                }
+            turn = "White";
+        }
+        else{
+            for(var k in groupW)
+                {
+                    var o = groupW[k];
+                    o.setDraggable(false);
+                }
+            for(var k in groupB)
+                {
+                    var o = groupB[k];
+                    o.setDraggable(true);
+                }
+            turn = "Black";   
+        }
+    }
+    function updateLogic(point_name,player)
+    {
+        
+        
+    }
     stage.add(layer);
     stage.add(piecesLayer);  
       
