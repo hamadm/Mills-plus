@@ -38,19 +38,16 @@ function checkFields()
 	for(var key in playing_lines){
 	if(playing_lines[key].p1.fill_color == playing_lines[key].p2.fill_color &&
 	 playing_lines[key].p2.fill_color == playing_lines[key].p3.fill_color){
-		console.log('OK');
 		layer.add(lines[key]);
-        if(playing_lines[key].p1.fill_color == 'Black'){
+        if(playing_lines[key].p1.fill_color == 'Black')
             lines[key].stroke('blue');
-            layer.draw();
-            lines[key].strokeWidth(3);}
-        if(playing_lines[key].p1.fill_color == 'White'){
+
+        if(playing_lines[key].p1.fill_color == 'White')
             lines[key].stroke('red');
-            layer.draw();
-            lines[key].strokeWidth(3);}
+
+        layer.draw();
+        lines[key].strokeWidth(3);
 	}
-	else
-		console.log('nope');
 }
 }
 
