@@ -1,11 +1,20 @@
 
-var stage = new Kinetic.Stage({
+    //Settings
+    //postions of the original place of the picecs in the start of the game
+    var originalXPosW = 555
+    var originalYPosW = 700
+    var originalXPosB = 45
+    var originalYPosB = 700
+
+
+    // intinalizing the stage
+    var stage = new Kinetic.Stage({
         container: 'container',
         width: 600,
         height: 800
-      });
-
-      var layer = new Kinetic.Layer();
+    });
+    // creating the layer of the board that has the lines and outlines
+    var layer = new Kinetic.Layer(); 
 
 
 
@@ -76,7 +85,6 @@ var stage = new Kinetic.Stage({
         lines[key].strokeWidth(3);
     }
     
-    var radius = 10;
     var outlines = {
     point_1: {x: 45,y: 45},
     point_2: {x: 299,y: 45},
@@ -127,21 +135,21 @@ var stage = new Kinetic.Stage({
     
     for(var i=0 ; i<9 ;i++){
         var c = new Kinetic.Circle ({
-        x: 45,
-        y: 700,
+        x: originalXPosB,
+        y: originalYPosB,
         radius: 25,
         fill: 'black',
         draggable: true,
-        name: 'black'
+        name: 'Black'
         });
         piecesLayer.add(c);
 
       } 
-      //white pices
+      //white pieces
       for(var i=0 ; i<9 ;i++){
         var c = new Kinetic.Circle ({
-        x: 555,
-        y: 700,
+        x: originalXPosW,
+        y: originalYPosW,
         radius: 25,
         fill: 'white',
         draggable: true,
@@ -149,7 +157,7 @@ var stage = new Kinetic.Stage({
         });
         piecesLayer.add(c);
       } 
-      stage.add(piecesLayer);
+      
       // checking if reched outline or not to snap
       function isNearOutline(circle, outline) {
         var a = circle;
@@ -163,35 +171,34 @@ var stage = new Kinetic.Stage({
           return false;
         }
       }
-      var originalXPostion = 0;
-      var originalYPostion = 0;
         piecesLayer.on('dragstart', function(evt) {
-              originalXPostion= evt.target.getX();
-              originalYPostion= evt.target.getY();
-              this.moveToTop();
-              piecesLayer.draw();
-            });
+            var piece = evt.target;
+            piece.moveToTop();
+            piecesLayer.draw();
+        });
         piecesLayer.on('dragend', function(evt) {
-            var pice = evt.target;
+            var piece = evt.target;
             for(var key in outlines)
             {
               var outline = outlines[key];
-              if(isNearOutline(pice, outline) && !pice.inRightPlace && !outline.filled) {
-                pice.setPosition({x:outline.x, y:outline.y});
-                pice.draw();
-                pice.inRightPlace = true;
+              if(isNearOutline(piece, outline) && !outline.filled) {
+                piece.setPosition({x:outline.x, y:outline.y});
+                piece.draw();
+                piece.inRightPlace = true; //Piece is put in the board(to check later if it's not then return it to original place)
                 outline.filled = true;
                 setTimeout(function() {
-                pice.setDraggable(false);
+                
+                if(state == filling_board_state) piece.setDraggable(false);
                 }, 50);
               }
             }
-            if(!pice.inRightPlace) {
-                pice.setPosition({x:(pice.name=='black')?45:555, y:700});
+            // returning the piece to its original place if 
+            if(!piece.inRightPlace) {
+                piece.setPosition({x:(piece.name()=='White')?originalXPosW:originalXPosB, y:(piece.name()=='White')?originalYPosW:originalYPosB});
               }
             piecesLayer.draw();
-            });
+        });
       
-
-
-      stage.add(layer);
+    stage.add(layer);
+    stage.add(piecesLayer);  
+      
