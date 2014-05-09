@@ -40,36 +40,36 @@ function checkFields()
 	 playing_lines[key].p2.fill_color == playing_lines[key].p3.fill_color){
 		console.log('OK');
 		layer.add(lines[key]);
-        if(playing_lines[key].p1.fill_color == 'Black')
+        if(playing_lines[key].p1.fill_color == 'Black'){
             lines[key].stroke('blue');
-        if(playing_lines[key].p1.fill_color == 'White')
+            layer.draw();
+            lines[key].strokeWidth(3);}
+        if(playing_lines[key].p1.fill_color == 'White'){
             lines[key].stroke('red');
-        layer.draw();
-        lines[key].strokeWidth(3);
+            layer.draw();
+            lines[key].strokeWidth(3);}
 	}
 	else
 		console.log('nope');
 }
 }
-/*function isValidMove(original, target){
-    console.log[ "print"];
-    if(playing_lines['top_first'].p1 == original.id() && playing_lines['top_first'].p2 == target ){
-        return true;
-        console.log[target];
-    }
-    else
-        return false;
-    console.log[target];
-
-}*/ 
 
 function isValidMove(piece, target){
-    console.log(outlines[piece.id()]);
-    console.log(target);
 
-    if(playing_lines['top_first'].p1 == outlines[piece.id()] &&playing_lines['top_first'].p2 == target)
-     return true;
+for(var key in playing_lines){
+    //console.log(playing_lines[key].p1);
+    //console.log(outlines[piece.id()]);
+    //console.log(key);
+    if(playing_lines[key].p1 == outlines[piece.id()] && playing_lines[key].p2 == target)
+        return true;
+    if(playing_lines[key].p3 == outlines[piece.id()] && playing_lines[key].p2 == target)
+        return true;
 
-    else
-        return false;
+    if(playing_lines[key].p2 == outlines[piece.id()] && playing_lines[key].p1 == target)
+        return true;
+
+    if(playing_lines[key].p2 == outlines[piece.id()] && playing_lines[key].p3 == target)
+        return true;
+    }
+    return false;
 }
