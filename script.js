@@ -146,7 +146,7 @@
     var groupBInBoard = []; // in the move state
     var groupWInBoard = []; // in the move state
     // black pieces
-    for(var i=0 ; i<9 ;i++){
+    for(var i=0 ; i<3 ;i++){
         var c = new Kinetic.Circle ({
         x: originalXPosB,
         y: originalYPosB,
@@ -161,7 +161,7 @@
 
       } 
       //white pieces
-      for(var i=0 ; i<9 ;i++){
+      for(var i=0 ; i<3 ;i++){
         var c = new Kinetic.Circle ({
         x: originalXPosW,
         y: originalYPosW,
@@ -214,7 +214,7 @@
                 piece.id(key);
                 checkFields();
                 updateLogic(key,piece.name());
-                //changeTurn();
+                changeTurn();
                 setTimeout(function() {
                     if(piece.name() == "Black"){
                         groupB.pop(piece);
@@ -236,6 +236,7 @@
           }
           else if(state == "move_state")
           {
+            var valid = false;
             for(var key in outlines)
             {
                 var outline = outlines[key];
@@ -245,12 +246,19 @@
                         outlines[piece.id()].filled = false;
                         outlines[piece.id()].fill_color = null;
                         piece.id(key);
+                        valid = true; //set this local variable to true to tell this method that the piece found its right plases and not to return it to original place
                         piece.setPosition({x:outline.x, y:outline.y});
                         piece.draw();
                         outline.filled = true;
                         outline.fill_color = piece.name();
+                        changeTurn();
                     }
                 }
+            }
+            //return to original place because it's unvalid
+            if(!valid)
+            {
+                piece.setPosition({x:outlines[piece.id()].x, y:outlines[piece.id()].y});
             }
 
           }
@@ -259,21 +267,22 @@
 
 
     function changeTurn(){
-        if(turn == "Black"){
-            for(var k in groupB)
-                {
-                    var o = groupB[k];
-                    o.setDraggable(false);
-                }
-            for(var k in groupW)
-                {
-                    var o = groupW[k];
-                    o.setDraggable(true);
-                }
-            turn = "White";
-        }
-        else{
-            if(state == "fill_state"){
+        if(state == "fill_state"){
+            if(turn == "Black"){
+                for(var k in groupB)
+                    {
+                        var o = groupB[k];
+                        o.setDraggable(false);
+                    }
+                for(var k in groupW)
+                    {
+                        var o = groupW[k];
+                        o.setDraggable(true);
+                    }
+                turn = "White";
+            }
+            else{
+            
                 for(var k in groupW)
                     {
                         var o = groupW[k];
@@ -295,6 +304,35 @@
                 }
                 turn = "Black";   
             }
+        }
+        else if(state == "move_state")
+        {
+            if(turn == "Black")
+            {
+                for(var k in groupBInBoard)
+                {
+                    groupBInBoard[k].setDraggable(false);
+                }
+                for(var k in groupWInBoard)
+                {
+                    groupWInBoard[k].setDraggable(true);
+                }
+                turn = "White";
+            }
+            else
+            {
+                for(var k in groupWInBoard)
+                {
+                    groupWInBoard[k].setDraggable(false);
+                }
+                for(var k in groupBInBoard)
+                {
+                    groupBInBoard[k].setDraggable(true);
+                }
+                turn = "Black";
+            }
+
+
         }
     }
     function updateLogic(point_name,player)
