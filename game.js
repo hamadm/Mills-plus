@@ -51,9 +51,25 @@ function checkFields()
 		console.log('nope');
 }
 }
-function isValidMove(target){
-    if(playing_lines['top_first'].p1 == original && playing_lines['top_first'].p2 == target)
+/*function isValidMove(original, target){
+    console.log[ "print"];
+    if(playing_lines['top_first'].p1 == original.id() && playing_lines['top_first'].p2 == target ){
+        return true;
+        console.log[target];
+    }
+    else
+        return false;
+    console.log[target];
 
+}*/ 
 
-        
+function isValidMove(piece, target){
+    console.log(outlines[piece.id()]);
+    console.log(target);
+
+    if(playing_lines['top_first'].p1 == outlines[piece.id()] &&playing_lines['top_first'].p2 == target)
+     return true;
+
+    else
+        return false;
 }
