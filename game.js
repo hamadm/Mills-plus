@@ -51,3 +51,9 @@ function checkFields()
 		console.log('nope');
 }
 }
+function isValidMove(target){
+    if(playing_lines['top_first'].p1 == original && playing_lines['top_first'].p2 == target)
+
+
+        
+}
