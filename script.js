@@ -1,6 +1,6 @@
 
     //Settings
-    //postions of the original place of the picecs in the start of the game
+    //postions of the original place of the pieces in the start of the game
     var originalXPosW = 555
     var originalYPosW = 700
     var originalXPosB = 45
@@ -166,7 +166,7 @@
         
       } 
       
-      // checking if reched outline or not to snap
+      // checking if reached outline or not to snap
       function isNearOutline(circle, outline) {
         var a = circle;
         var o = outline;
@@ -197,6 +197,8 @@
                 piece.draw();
                 piece.inRightPlace = true; //Piece is put in the board(to check later if it's not then return it to original place)
                 outline.filled = true;
+                outline.fill_color = piece.name();
+                checkFields();
                 updateLogic(key,piece.name());
                 changeTurn();
                 setTimeout(function() {
