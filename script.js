@@ -246,6 +246,7 @@
                         outlines[piece.id()].filled = false;
                         outlines[piece.id()].fill_color = null;
                         piece.id(key);
+                        checkFields();
                         valid = true; //set this local variable to true to tell this method that the piece found its right plases and not to return it to original place
                         piece.setPosition({x:outline.x, y:outline.y});
                         piece.draw();
@@ -264,8 +265,53 @@
           }
             piecesLayer.draw();
         });
+    var pstate = state;
+    function setRemoveState(color)
+    {
+        pstate = state;
+        if(state == "fill_state")
+        {
+            if(color == "Black")
+                for(var k in groupBInBoard)
+                    groupBInBoard[k].fill("red");
+        }
+        else if(state == "move_state")
+        {
+            if(color == "Black")
+                for(var k in groupBInBoard)
+                    groupBInBoard[k].fill("red");
+                piecesLayer.on("click",function(evt){
+                    console.log("Test"+evt.target.name());
+
+                });
+
+        }
+        state = "remove_state";
+    }
+    function unsetRemoveState()
+    {
+        
+    }
+    piecesLayer.on('click', function(evt) {
+        if(state == "remove_state")
+        {
+            var piece = evt.target;
+            if(piece.fill() == "red")
+            {
+                outlines[piece.id()].filled = false;
+                outlines[piece.id()].fill_color = null;
+                piece.destroy();
+                state = pstate;
+                piecesLayer.draw();
+                unsetRemoveState();
+            }
+        }
+        else if(state == "move_state")
+        {
 
 
+        }
+      });
     function changeTurn(){
         if(state == "fill_state"){
             if(turn == "Black"){
