@@ -200,7 +200,7 @@
                 outline.fill_color = piece.name();
                 checkFields();
                 updateLogic(key,piece.name());
-                changeTurn();
+                //changeTurn();
                 setTimeout(function() {
                     if(piece.name() == "Black"){
                         groupB.pop(piece);
