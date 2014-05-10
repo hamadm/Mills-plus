@@ -10,9 +10,16 @@
     // setting who to start
     turn = "Black"; // always the black starts
 
+    //image pieces settings
+    var b_piece = new Image();
+    b_piece.src = 'img/b-piece.png';
+
+    var w_piece = new Image();
+    w_piece.src = 'img/w-piece.png';
+    var piece_radius = 25; // the piece radius to set the postion
 
 //Start of initializing board
-    // intinalizing the stage
+    // intinalizing the stage  
     var stage = new Kinetic.Stage({
         container: 'container',
         width: 600,
@@ -146,35 +153,45 @@
     var groupBInBoard = []; // in the move state
     var groupWInBoard = []; // in the move state
     // black pieces
-    for(var i=0 ; i<3 ;i++){
-        var c = new Kinetic.Circle ({
-        x: originalXPosB,
-        y: originalYPosB,
-        radius: 25,
-        fill: 'black',
-        draggable: true,
-        name: 'Black',
-        id:0
-        });
-        groupB.push(c);
-        piecesLayer.add(c);
+    b_piece.onload = function() {
+        for(var i=0 ; i<3 ;i++){
+            var c = new Kinetic.Image ({
+            image: b_piece,
+            x: originalXPosB-piece_radius,
+            y: originalYPosB-piece_radius,
+            draggable: true,
+            name: 'Black',
+            id:0
+            });
+            groupB.push(c);
+            piecesLayer.add(c);
+            c.cache();
+            c.filters([Kinetic.Filters.RGB]);
+            c.red(100);
+            piecesLayer.draw();
+          } 
+        piecesLayer.draw();
+    }
 
-      } 
       //white pieces
-      for(var i=0 ; i<3 ;i++){
-        var c = new Kinetic.Circle ({
-        x: originalXPosW,
-        y: originalYPosW,
-        radius: 25,
-        fill: 'white',
-        draggable: false,
-        name: 'White',
-        id:0
-        });
-        groupW.push(c);
-        piecesLayer.add(c);
-        
-      } 
+      w_piece.onload = function() {
+          for(var i=0 ; i<3 ;i++){
+            var c = new Kinetic.Image ({
+            image: w_piece,
+            x: originalXPosW-piece_radius,
+            y: originalYPosW-piece_radius,
+            draggable: false,
+            name: 'White',
+            id:0
+            });
+            groupW.push(c);
+            piecesLayer.add(c);
+            c.cache();
+            c.filters([Kinetic.Filters.RGB]);
+            c.red(100);
+          } 
+          piecesLayer.draw();
+    }
       
 //End of initializing board
 
@@ -183,8 +200,8 @@
       function isNearOutline(circle, outline) {
         var a = circle;
         var o = outline;
-        var ax = a.getX();
-        var ay = a.getY();
+        var ax = a.getX()+piece_radius;
+        var ay = a.getY()+piece_radius;
         if(ax >= o.x - 42 && ax <= o.x + 42 && ay >= o.y - 42 && ay <= o.y + 42) {
           return true;
         }
@@ -192,46 +209,52 @@
           return false;
         }
       }
-        
+        function dragStartF(piece)
+        {
+            piece.moveToTop();
+            piecesLayer.draw();
+        }
 
         piecesLayer.on('dragstart', function(evt) {
             var piece = evt.target;
-            piece.moveToTop();
-            piecesLayer.draw();
+            dragStartF(piece);
+            
         });
-        piecesLayer.on('dragend', function(evt) {
-            var piece = evt.target;
+        function dragEndF(piece)
+        {
             if(state == "fill_state"){
             for(var key in outlines)
             {
               var outline = outlines[key];
               if(isNearOutline(piece, outline) && !outline.filled) {
-                piece.setPosition({x:outline.x, y:outline.y});
+                if(piece.name() == "Black"){
+                    var piece = groupB.pop();
+                    groupBInBoard.push(piece);
+                }
+                else{
+                    var piece = groupW.pop();
+                    groupWInBoard.push(piece);
+                }
+                piece.setPosition({x:outline.x - piece_radius, y:outline.y - piece_radius});
                 piece.draw();
                 piece.inRightPlace = true; //Piece is put in the board(to check later if it's not then return it to original place)
                 outline.filled = true;
                 outline.fill_color = piece.name();
                 piece.id(key);
-                checkFields();
-                updateLogic(key,piece.name());
-                changeTurn();
+                
+                
                 setTimeout(function() {
-                    if(piece.name() == "Black"){
-                        groupB.pop(piece);
-                        groupBInBoard.push(piece);
-                    }
-                    else{
-                        groupW.pop(piece);
-                        groupWInBoard.push(piece);
-                    }
                     piece.setDraggable(false);
+                    changeTurn();
+                    checkFields();
                 }, 50);
+                
                 break;
               }
             }
             // returning the piece to its original place if 
             if(!piece.inRightPlace) {
-                piece.setPosition({x:(piece.name()=='White')?originalXPosW:originalXPosB, y:(piece.name()=='White')?originalYPosW:originalYPosB});
+                piece.setPosition({x:(piece.name()=='White')?originalXPosW- piece_radius:originalXPosB- piece_radius, y:(piece.name()=='White')?originalYPosW - piece_radius:originalYPosB - piece_radius});
               }
           }
           else if(state == "move_state")
@@ -247,67 +270,131 @@
                         outlines[piece.id()].fill_color = null;
                         piece.id(key);
                         valid = true; //set this local variable to true to tell this method that the piece found its right plases and not to return it to original place
-                        piece.setPosition({x:outline.x, y:outline.y});
+                        piece.setPosition({x:outline.x - piece_radius, y:outline.y - piece_radius});
                         piece.draw();
                         outline.filled = true;
                         outline.fill_color = piece.name();
-                        checkFields();
                         changeTurn();
+                        checkFields();
+                        
                     }
                 }
             }
             //return to original place because it's unvalid
             if(!valid)
             {
-                piece.setPosition({x:outlines[piece.id()].x, y:outlines[piece.id()].y});
+                piece.setPosition({x:outlines[piece.id()].x - piece_radius, y:outlines[piece.id()].y - piece_radius});
             }
 
           }
             piecesLayer.draw();
+        }
+        piecesLayer.on('dragend', function(evt) {
+            var piece = evt.target;
+            dragEndF(piece);
         });
+        /*stage.on('click', function(evt) {
+            console.log(stage.getPointerPosition());
+            //dragEndF();
+        });*/
     var pstate = state;
     function setRemoveState(color)
     {
         pstate = state;
+        // do action to show what you could remove
         if(color == "Black")
-            for(var k in groupBInBoard)
-                groupBInBoard[k].fill("red");
+            group = groupBInBoard;
         else
-            for(var k in groupWInBoard)
-                groupWInBoard[k].fill("red");
+            group = groupWInBoard;
+ 
+            for(var k in group){
+                console.log(group[k].name());
+            }
+
+            
+        removeDraggable(turn);
         piecesLayer.draw();
         state = "remove_state";
-    }
-    function unsetRemoveState()
-    {
-        for(var k in groupBInBoard)
-            groupBInBoard[k].fill("black");
-        for(var k in groupWInBoard)
-            groupWInBoard[k].fill("white");
-        piecesLayer.draw();
-    }
-    piecesLayer.on('click', function(evt) {
+        piecesLayer.on('click.event1', function(evt) {
         if(state == "remove_state")
         {
             var piece = evt.target;
-            if(piece.fill() == "red")
+            if(piece.name() == color)
             {
+                unsetRemoveState();
+                console.log(piece.id()+" Was removed");
                 outlines[piece.id()].filled = false;
                 outlines[piece.id()].fill_color = null;
+                var index = group.indexOf(piece);
+                group.splice(index, 1);
+
+                for(var k in group){
+                console.log(group[k].id()+" - "+group[k].name());
+                }
                 piece.destroy();
                 state = pstate;
+                setDraggable(turn);
                 console.log(pstate);
-                unsetRemoveState();
-                piecesLayer.off('click');
+                
+                piecesLayer.off('click.event1');
                 piecesLayer.draw();
+
 
             }
         }
-        else if(state == "move_state")
-        {
-
-        }
       });
+        
+        return;
+    }
+    function unsetRemoveState()
+    {
+        // remove the action to show what you could remove
+        
+    }
+    function removeDraggable(t){
+        if(t == "Black" && state == "move_state")
+        {
+            for(var k in groupBInBoard)
+                groupBInBoard[k].setDraggable(false);
+        }
+        else if(t == "White" && state == "move_state")
+        {
+            for(var k in groupWInBoard)
+                groupWInBoard[k].setDraggable(false);
+        }
+        else if(t == "Black" && state == "fill_state")
+        {
+            for(var k in groupB)
+                groupB[k].setDraggable(false);
+        }
+        else if(t == "White" && state == "fill_state")
+        {
+            for(var k in groupW)
+                groupW[k].setDraggable(false);
+        }
+    }
+    function setDraggable(t){
+        if(t == "Black" && state == "move_state")
+        {
+            for(var k in groupBInBoard)
+                groupBInBoard[k].setDraggable(true);
+        }
+        else if(t == "White" && state == "move_state")
+        {
+            for(var k in groupWInBoard)
+                groupWInBoard[k].setDraggable(true);
+        }
+        else if(t == "Black" && state == "fill_state")
+        {
+            for(var k in groupB)
+                groupB[k].setDraggable(true);
+        }
+        else if(t == "White" && state == "fill_state")
+        {
+            for(var k in groupW)
+                groupW[k].setDraggable(true);
+        }
+    }
     function changeTurn(){
         if(state == "fill_state"){
             if(turn == "Black"){
@@ -337,12 +424,7 @@
                     }
                 if(groupB.length == 0)
                 {
-                    state = "move_state";
-                    for(var k in groupBInBoard)
-                    {
-                        var o = groupBInBoard[k];
-                        o.setDraggable(true);
-                    }
+                    changeToMoveState();
                 }
                 turn = "Black";   
             }
@@ -377,12 +459,15 @@
 
         }
     }
-    function updateLogic(point_name,player)
+    function changeToMoveState()
     {
-        
-        
+        state = "move_state";
+        for(var k in groupBInBoard)
+        {
+            var o = groupBInBoard[k];
+            o.setDraggable(true);
+        }
     }
     stage.add(layer);
     stage.add(outlinesLayer);
     stage.add(piecesLayer);  
-      
