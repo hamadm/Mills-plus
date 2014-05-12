@@ -4,8 +4,33 @@
 	width:600px;
 	height:800px;
 	margin: 20px auto;
+	position:absolute;
 }
 body {
-	margin: 0 auto;
+	width:600px;
+	margin: 0px auto;
 	background-color: #D2E6E1;
+}
+.p {
+	display: inline;
+	font-size: 20px;
+}
+#player1 {
+	position: relative;
+    top: 640px;
+    left: 20px;
+    font-weight: bold;
+	color: green;   
+}
+#player2 {
+	position: relative;
+    top: 640px;
+    left: 460px;
+    color: gray;
+}
+#restart {
+	position: relative;
+	width: 100px;
+    top: 640px;
+    left: 120px;
 }

@@ -33,22 +33,41 @@
     playing_lines['left_inter'] = 	new  Line(outlines['point_10'],outlines['point_11'] , outlines['point_12']);
     playing_lines['right_inter'] = 	new Line(outlines['point_13'],outlines['point_14'] , outlines['point_15']);
 
-function checkFields()
+function checkFields(name)
 {
 	for(var key in playing_lines){
-	if(playing_lines[key].p1.fill_color == playing_lines[key].p2.fill_color &&
-	 playing_lines[key].p2.fill_color == playing_lines[key].p3.fill_color){
-		layer.add(lines[key]);
-        if(playing_lines[key].p1.fill_color == 'Black')
-            lines[key].stroke('blue');
+    	if(playing_lines[key].p1.fill_color == name &&
+    	 playing_lines[key].p2.fill_color == name && playing_lines[key].p3.fill_color == name ){
+            console.log(key+" - ");
 
-        if(playing_lines[key].p1.fill_color == 'White')
-            lines[key].stroke('red');
+            if(playing_lines[key].p1.fill_color == 'Black' && !playing_lines[key].isFilledByPlayer1 ){
+                console.log(key+" - before - "+playing_lines[key].isFilledByPlayer1);
+                playing_lines[key].isFilledByPlayer1 = true;
+                console.log(key+" - after - "+playing_lines[key].isFilledByPlayer1);
+                lines[key].stroke('blue');
+                setRemoveState("White");
+            }
+            else if(playing_lines[key].p1.fill_color == 'White' && !playing_lines[key].isFilledByPlayer2 ){
+                console.log("2 - before - "+playing_lines[key].isFilledByPlayer2);
+                playing_lines[key].isFilledByPlayer2 = true;
+                console.log("2 - after - "+playing_lines[key].isFilledByPlayer2);
+                lines[key].stroke('red');
+                setRemoveState("Black");
+            }
 
-        layer.draw();
-        lines[key].strokeWidth(3);
-	}
-}
+            layer.draw();
+    	}
+    }
+    console.log("---"+(groupW.length+groupWInBoard.length)+"---");
+    // check for winning 
+    if(groupW.length+groupWInBoard.length <3)
+    {
+        console.log("Player1 won (Black)");
+    }
+    else if(groupB.length+groupBInBoard.length <3)
+    {
+        console.log("Player2 won (White)");
+    }
 }
 
 function isValidMove(piece, target){

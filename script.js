@@ -140,11 +140,63 @@
             y: outlines[key].y,
             radius: 8,
             fill: 'black',
+            id: key
+            
         });
+        c.hitFunc(function(context) {
+          context.beginPath();
+          context.arc(0,0,40,0,2*Math.PI);
+          context.closePath();
+          context.fillStrokeShape(this);
+        });
+        outlinesLayer.draw();
         outlinesLayer.add(c);
     }
+    outlinesLayer.on('click',function(evt){
+        console.log(evt.target.id());
+        if(state == "fill_state")
+            addInFill(turn,evt.target.id())
 
-
+    });
+    function addInFill(t,o) // turn , outline key
+    {
+        var piece = null;
+        if(t == "Black")
+            piece = groupB[groupB.length-1];
+        else
+            piece = groupW[groupW.length-1];
+        movePieceTo(piece,o);
+        
+    }
+    function movePieceTo(p,o) //piece, outline key
+    {
+        var valid = false;
+        var outline = outlines[o];
+        var piece = p;
+        if(!outline.filled){
+            if(piece.name() == "Black"){
+                    groupB.pop();
+                    groupBInBoard.push(piece);
+                }
+                else{
+                    groupW.pop();
+                    groupWInBoard.push(piece);
+                }
+                piece.setPosition({x:outline.x - piece_radius, y:outline.y - piece_radius});
+                piece.draw();
+                piece.inRightPlace = true; //Piece is put in the board(to check later if it's not then return it to original place)
+                outline.filled = true;
+                outline.fill_color = piece.name();
+                piece.id(o);
+                
+                setTimeout(function() {
+                    piece.setDraggable(false);
+                    changeTurn();
+                    checkFields(piece.name());
+                }, 50);
+        }
+            piecesLayer.draw();
+    }
     var piecesLayer = new Kinetic.Layer();
 
     //groups that has the piceses that are not in the board yet (stat= filling_board)
@@ -220,6 +272,13 @@
             dragStartF(piece);
             
         });
+        /*piecesLayer.on('click', function(evt) {
+            if(state == "move_state"){
+                var piece = evt.target;
+                dragStartF(piece);
+            }
+            
+        });*/
         function dragEndF(piece)
         {
             if(state == "fill_state"){
@@ -246,7 +305,7 @@
                 setTimeout(function() {
                     piece.setDraggable(false);
                     changeTurn();
-                    checkFields();
+                    checkFields(piece.name());
                 }, 50);
                 
                 break;
@@ -274,8 +333,8 @@
                         piece.draw();
                         outline.filled = true;
                         outline.fill_color = piece.name();
-                        changeTurn();
-                        checkFields();
+                        changeTurn(piece.name());
+                        checkFields(piece.name());
                         
                     }
                 }
@@ -315,11 +374,12 @@
         removeDraggable(turn);
         piecesLayer.draw();
         state = "remove_state";
-        piecesLayer.on('click.event1', function(evt) {
+        outlinesLayer.listening(false);
+        piecesLayer.on('click', function(evt) {
         if(state == "remove_state")
         {
             var piece = evt.target;
-            if(piece.name() == color)
+            if(piece.name() == color && piece.id() != 0)
             {
                 unsetRemoveState();
                 console.log(piece.id()+" Was removed");
@@ -332,11 +392,21 @@
                 console.log(group[k].id()+" - "+group[k].name());
                 }
                 piece.destroy();
+                // check for winning 
+                if(groupW.length+groupWInBoard.length <3)
+                {
+                    winning("Black");
+                }
+                else if(groupB.length+groupBInBoard.length <3)
+                {
+                    winning("White");
+                }
                 state = pstate;
                 setDraggable(turn);
                 console.log(pstate);
                 
                 piecesLayer.off('click.event1');
+                outlinesLayer.listening(true);
                 piecesLayer.draw();
 
 
@@ -345,6 +415,72 @@
       });
         
         return;
+    }
+    function winning(p)
+    {
+        console.log("Player won: "+p);
+        layer.listening(false);
+        piecesLayer.listening(false);
+        outlinesLayer.listening(false);
+        var winningLayer = new Kinetic.Layer();
+        var rematchLayer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 70,
+            y: 100,
+            width: 460,
+            height: 350,
+            fill: '#9c9c9c',
+            stroke: 'green',
+            strokeWidth: 2,
+            cornerRadius: 15,
+            opacity: 0.95
+        });
+        var rematch_Button = new Kinetic.Rect({
+            x: 120,
+            y: 250,
+            width: 360,
+            height: 100,
+            fill: '#e2e2e2',
+            stroke: 'green',
+            strokeWidth: 3,
+            cornerRadius: 15,
+            opacity: 0.95
+        });
+        var winning_Text = new Kinetic.Text({
+            x: stage.width() / 2,
+            y: 150,
+            text: 'Player '+p+" Won",
+            fontSize: 50,
+            fontFamily: 'Calibri',
+            fill: 'green',
+            stroke: 'white',
+            strokeWidth: 1
+        });
+        var rematch_Text = new Kinetic.Text({
+            x: stage.width() / 2,
+            y: 300,
+            text: 'Restart',
+            fontSize: 50,
+            fontFamily: 'Calibri',
+            fill: 'green',
+            stroke: 'white',
+            strokeWidth: 1
+        });
+        rematchLayer.on('click',function(){
+            //restart();
+            console.log("Restart is clicked");
+        });
+        winning_Text.offsetX(winning_Text.width()/2);
+        rematch_Text.offsetY(rematch_Text.height()/2);
+        rematch_Text.offsetX(rematch_Text.width()/2);
+        winningLayer.add(rect);
+        winningLayer.add(winning_Text);
+        rematchLayer.add(rematch_Button);
+        rematchLayer.add(rematch_Text);
+        winningLayer.draw();
+        rematchLayer.draw();
+        stage.add(winningLayer);
+        stage.add(rematchLayer);
     }
     function unsetRemoveState()
     {
@@ -396,6 +532,18 @@
         }
     }
     function changeTurn(){
+        if(turn == "White"){
+            document.getElementById("player1").style.color = "green";
+            document.getElementById("player1").style.fontWeight = "bold";
+            document.getElementById("player2").style.color = "gray";
+            document.getElementById("player2").style.fontWeight = "normal";
+        }
+        if(turn == "Black"){
+            document.getElementById("player2").style.color = "green";
+            document.getElementById("player2").style.fontWeight = "bold";
+            document.getElementById("player1").style.color = "gray";
+            document.getElementById("player1").style.fontWeight = "normal";
+        }
         if(state == "fill_state"){
             if(turn == "Black"){
                 for(var k in groupB)
