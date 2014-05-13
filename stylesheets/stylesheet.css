@@ -421,3 +421,11 @@ Small Device Styles
   }
 
 }
+
+#playerScore {
+    position: absolute;
+    top: 690px;
+    left: 250px;
+    font-weight: bold;
+	color: green;   
+}

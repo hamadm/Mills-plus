@@ -5,6 +5,11 @@ function restart()
     state = "fill_state"
     var possible_Moves_B = []; 
     var possible_Moves_W = []; 
+    for(var key in playing_lines)
+    {
+        playing_lines[key].isFilledByPlayer1 = false;
+        playing_lines[key].isFilledByPlayer2 = false;
+    }
 
     // reset document 
     document.getElementById("player1").style.color = "green";
@@ -47,6 +52,7 @@ function restart()
 
     layer.draw();
     piecesLayer.draw();
+    layer.listening(true);
     piecesLayer.listening(true);
     outlinesLayer.listening(true);
     outlinesLayer.draw();
@@ -56,9 +62,9 @@ function restart()
     //Settings
     //postions of the original place of the pieces in the start of the game
     var originalXPosW = 555;
-    var originalYPosW = 700;
+    var originalYPosW = 690;
     var originalXPosB = 45;
-    var originalYPosB = 700;
+    var originalYPosB = 690;
     var state = "fill_state"; // 1- fill_state , 2- move_state , 3- remove_state
     
     // setting who to start
@@ -81,7 +87,7 @@ function restart()
     var stage = new Kinetic.Stage({
         container: 'container',
         width: 600,
-        height: 800
+        height: 750
     });
     // creating the layer of the board that has the lines and outlines
     var layer = new Kinetic.Layer(); 
@@ -496,6 +502,9 @@ function loadPieces(p) {
         layer.listening(false);
         piecesLayer.listening(false);
         outlinesLayer.listening(false);
+        score[p] = score[p]+1;
+        document.getElementById("playerScore").innerHTML = score['Black']+" - "+score['White']+"<br/>";
+        console.log(score[p]);
         var winningLayer = new Kinetic.Layer();
         var rematchLayer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
@@ -562,11 +571,14 @@ function loadPieces(p) {
         rematchLayer.draw();
         stage.add(winningLayer);
         stage.add(rematchLayer);
-        rematchLayer.on('click',function(){
-            restart();
-            score[p] = score[p]+1;
+        rematchLayer.on('click.event2',function(){
+            layer.listening(true);
+            piecesLayer.listening(true);
+            outlinesLayer.listening(true);
+            piecesLayer.off('click.event2');
             winningLayer.destroy();
             rematchLayer.destroy();
+            restart();
         });
     }
     function unsetRemoveState()
@@ -624,12 +636,14 @@ function loadPieces(p) {
             document.getElementById("player1").style.fontWeight = "bold";
             document.getElementById("player2").style.color = "gray";
             document.getElementById("player2").style.fontWeight = "normal";
+            document.getElementById("player2").innerHTML = "Player2<br/>x"+groupW.length;
         }
         if(turn == "Black"){
             document.getElementById("player2").style.color = "green";
             document.getElementById("player2").style.fontWeight = "bold";
             document.getElementById("player1").style.color = "gray";
             document.getElementById("player1").style.fontWeight = "normal";
+            document.getElementById("player1").innerHTML = "Player1<br/>x"+groupB.length;
         }
         if(state == "fill_state"){
             if(turn == "Black"){
