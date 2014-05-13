@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 function restart()
 {
     // reset logic 
@@ -92,7 +91,7 @@ function restart()
     });
     // creating the layer of the board that has the lines and outlines
     var layer = new Kinetic.Layer(); 
-=======
+
 
 var stage = new Kinetic.Stage({
         container: 'container',
@@ -101,7 +100,6 @@ var stage = new Kinetic.Stage({
       });
 
       var layer = new Kinetic.Layer();
->>>>>>> FETCH_HEAD
 
 
 
@@ -172,10 +170,8 @@ var stage = new Kinetic.Stage({
         lines[key].strokeWidth(3);
     }
     
-<<<<<<< HEAD
-=======
+
     var radius = 10;
->>>>>>> FETCH_HEAD
     var outlines = {
     point_1: {x: 45,y: 45},
     point_2: {x: 299,y: 45},
@@ -209,13 +205,11 @@ var stage = new Kinetic.Stage({
     point_24: {x: 555,y: 555},
     };
 
-<<<<<<< HEAD
     
     // adding the small circles outlines
     var outlinesLayer =  new Kinetic.Layer();
-=======
+
     // adding the small circles outlines
->>>>>>> FETCH_HEAD
     for(var key in outlines)
     {
         var c = new Kinetic.Circle({
@@ -223,7 +217,6 @@ var stage = new Kinetic.Stage({
             y: outlines[key].y,
             radius: 8,
             fill: 'black',
-<<<<<<< HEAD
             id: key
             
         });
@@ -350,7 +343,7 @@ function loadPieces(p) {
         var o = outline;
         var ax = a.getX()+piece_radius;
         var ay = a.getY()+piece_radius;
-=======
+
         });
         layer.add(c);
     }
@@ -389,7 +382,6 @@ function loadPieces(p) {
         var o = outline;
         var ax = a.getX();
         var ay = a.getY();
->>>>>>> FETCH_HEAD
         if(ax >= o.x - 42 && ax <= o.x + 42 && ay >= o.y - 42 && ay <= o.y + 42) {
           return true;
         }
@@ -397,7 +389,6 @@ function loadPieces(p) {
           return false;
         }
       }
-<<<<<<< HEAD
         function dragStartF(piece)
         {
             piece.moveToTop();
@@ -794,7 +785,6 @@ function loadPieces(p) {
     stage.add(layer);
     stage.add(outlinesLayer);
     stage.add(piecesLayer);  
-=======
       var originalXPostion = 0;
       var originalYPostion = 0;
         piecesLayer.on('dragstart', function(evt) {
@@ -827,4 +817,3 @@ function loadPieces(p) {
 
 
       stage.add(layer);
->>>>>>> FETCH_HEAD

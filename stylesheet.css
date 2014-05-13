@@ -2,7 +2,6 @@
 	background-image: url("img/board-bg.png");
 	background-repeat: no-repeat;
 	width:600px;
-<<<<<<< HEAD
 	height:700px;
 	margin: 0px auto;
     margin-top: 20px;
@@ -111,7 +110,6 @@ body {
     width: 100px;
     text-align: center;
 }
-=======
 	height:800px;
 	margin: 20px auto;
 }
@@ -119,4 +117,3 @@ body {
 	margin: 0 auto;
 	background-color: #D2E6E1;
 }
->>>>>>> FETCH_HEAD
