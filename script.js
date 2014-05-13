@@ -1,6 +1,57 @@
 function restart()
 {
+    // reset logic 
+    turn = "Black";
+    state = "fill_state"
+    var possible_Moves_B = []; 
+    var possible_Moves_W = []; 
 
+    // reset document 
+    document.getElementById("player1").style.color = "green";
+    document.getElementById("player1").style.fontWeight = "bold";
+    document.getElementById("player2").style.color = "gray";
+    document.getElementById("player2").style.fontWeight = "normal";
+    // reset Lines
+    for(var key in lines)
+    {
+        lines[key].stroke('black');
+        lines[key].strokeWidth(3);
+    }
+
+    //reset outlines
+    for(var key in outlines)
+    {
+        outlines[key].filled = false;
+        outlines[key].fill_color = null;
+    }
+    //destroy all pieces
+    //piecesLayer = new Kinetic.Layer();
+    for(var i in groupB){
+        groupB[i].destroy();
+    }
+    for(var i in groupW){
+        groupW[i].destroy();
+    }
+    for(var i in groupBInBoard){
+        groupBInBoard[i].destroy();
+    }
+    for(var i in groupWInBoard){
+        groupWInBoard[i].destroy();
+    }
+    groupB = []; // in the filling state
+    groupW = []; // in the filling state
+    groupBInBoard = []; // in the move state
+    groupWInBoard = []; // in the move state
+    loadPieces("Black");
+    loadPieces("White");
+
+    layer.draw();
+    piecesLayer.draw();
+    piecesLayer.listening(true);
+    outlinesLayer.listening(true);
+    outlinesLayer.draw();
+    stage.draw();
+    console.log("Restarted");
 }
     //Settings
     //postions of the original place of the pieces in the start of the game
@@ -21,6 +72,10 @@ function restart()
     w_piece.src = 'img/w-piece.png';
     var piece_radius = 25; // the piece radius to set the postion
 
+    //keeping track and state
+    var score = {}
+    score["Black"] = 0;
+    score["White"] = 0;
 //Start of initializing board
     // intinalizing the stage  
     var stage = new Kinetic.Stage({
@@ -493,10 +548,7 @@ function loadPieces(p) {
             stroke: 'white',
             strokeWidth: 1
         });
-        rematchLayer.on('click',function(){
-            //restart();
-            console.log("Restart is clicked");
-        });
+        
         winning_Text.offsetX(winning_Text.width()/2);
         reason_Text.offsetX(reason_Text.width()/2);
         rematch_Text.offsetY(rematch_Text.height()/2);
@@ -510,6 +562,12 @@ function loadPieces(p) {
         rematchLayer.draw();
         stage.add(winningLayer);
         stage.add(rematchLayer);
+        rematchLayer.on('click',function(){
+            restart();
+            score[p] = score[p]+1;
+            winningLayer.destroy();
+            rematchLayer.destroy();
+        });
     }
     function unsetRemoveState()
     {
