@@ -1,14 +1,16 @@
-	function Line(p1,p2,p3) {
-			this.p1 = p1;
-			this.p2 = p2;
-			this.p3 = p3;
-		}
-
-	var testing = 'good' 
+function Line(p1,p2,p3) {
+		this.p1 = p1;
+		this.p2 = p2;
+		this.p3 = p3;
+	}
+function possibleMove(from,to) {
+    this.from = from;
+    this.to = to;
+}
 
 
 //defining the game's lines <<< this is the start point of defining the game's rules
-	var playing_lines = {}; // this an array to ease the search of the completed lines in the game by a player
+	var playing_lines = {}; // this an array to ease the search of the completed lines in the game by a player   
     //largest box lines
     playing_lines['top_first'] 	=   new Line(outlines['point_1'],outlines['point_2'] , outlines['point_3']);
     playing_lines['bottom_first']= 	new Line(outlines['point_22'],outlines['point_23'] , outlines['point_24']);
@@ -88,4 +90,75 @@ for(var key in playing_lines){
         return true;
     }
     return false;
+}
+var possible_Moves_B = []; 
+var possible_Moves_W = []; 
+function printPossibleMoves(player)
+{
+    var possible_Moves;
+    if(player == "Black"){
+        possible_Moves = possible_Moves_B;
+    }
+    else{
+        possible_Moves = possible_Moves_W;
+    }
+    for(var i in possible_Moves)
+        console.log(i+"- From: X:"+possible_Moves[i].from.x + "Y:"+possible_Moves[i].from.y+" , To: X:"+possible_Moves[i].to.x + "Y:"+possible_Moves[i].to.y);
+}
+function hasPossibleMoves(player)
+{
+    fillPossibleMoves(player);
+    console.log("//////// checking for possible moves //////////");
+    printPossibleMoves(player);
+    if(player =="Black" && possible_Moves_B.length == 0)
+        return false;
+    else if(player =="White" && possible_Moves_W.length == 0)
+        return false;
+    return true;
+}
+function fillPossibleMoves(player)
+{
+    var possible_Moves = [];
+    console.log("Player: "+player);
+    var group;
+    if(player == "Black"){
+        group = groupBInBoard;
+        possible_Moves_B = [];
+        possible_Moves = possible_Moves_B;
+    }
+    else{
+        group = groupWInBoard;
+        possible_Moves_W = [];
+        possible_Moves = possible_Moves_W;
+    }
+    for(var key in group)
+    {
+        var piece = group[key];
+        console.log("piece: "+piece+" At: "+piece.id());
+        
+        for(var k in playing_lines)
+        {
+            console.log("Line: "+k);
+            if(playing_lines[k].p1 == outlines[piece.id()]){
+                console.log("p1: "+ piece.id());
+                if(!playing_lines[k].p2.filled)
+                    possible_Moves.push(new possibleMove(playing_lines[k].p1,playing_lines[k].p2));
+            }
+            else if(playing_lines[k].p2 == outlines[piece.id()])
+            {
+                console.log("p2: "+ piece.id());
+                if(!playing_lines[k].p1.filled)
+                    possible_Moves.push(new possibleMove(playing_lines[k].p2,playing_lines[k].p1));
+                if(!playing_lines[k].p3.filled)
+                    possible_Moves.push(new possibleMove(playing_lines[k].p2,playing_lines[k].p3));
+            }
+            else if(playing_lines[k].p3 == outlines[piece.id()]){
+                console.log("p1: "+ piece.id());
+                if(!playing_lines[k].p2.filled)
+                    possible_Moves.push(new possibleMove(playing_lines[k].p3,playing_lines[k].p2));
+            }
+        }
+    }
+    console.log("Finished");
+    
 }
