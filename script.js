@@ -16,6 +16,8 @@ function restart()
     document.getElementById("player1").style.fontWeight = "bold";
     document.getElementById("player2").style.color = "gray";
     document.getElementById("player2").style.fontWeight = "normal";
+    document.getElementById("player1").innerHTML = "Black<br/>x9";
+    document.getElementById("player2").innerHTML = "White<br/>x9";
     // reset Lines
     for(var key in lines)
     {
@@ -57,7 +59,10 @@ function restart()
     outlinesLayer.listening(true);
     outlinesLayer.draw();
     stage.draw();
-    console.log("Restarted");
+    gameConsole("Game is Restarted start filling");
+}
+function gameConsole(str){
+    document.getElementById('consoleText').innerHTML = str;
 }
     //Settings
     //postions of the original place of the pieces in the start of the game
@@ -217,8 +222,6 @@ function restart()
         outlinesLayer.add(c);
     }
     outlinesLayer.on('click',function(evt){
-        console.log(state);
-        console.log(evt.target.id());
         if(state == "fill_state")
             addInFill(turn,evt.target.id())
 
@@ -255,9 +258,7 @@ function restart()
                 
                 setTimeout(function() {
                     piece.setDraggable(false);
-                    console.log(state);
                     changeTurn();
-                    console.log(state);
                     checkFields(piece.name());
                 }, 50);
         }
@@ -279,8 +280,7 @@ function restart()
 function loadPieces(p) {
     // black pieces
     if(p =="Black"){
-        console.log("Black is loaded");
-        for(var i=0 ; i<4 ;i++){
+        for(var i=0 ; i<9 ;i++){
             var c = new Kinetic.Image ({
             image: b_piece,
             x: originalXPosB-piece_radius,
@@ -292,7 +292,6 @@ function loadPieces(p) {
             groupB.push(c);
             piecesLayer.add(c);
             c.cache();
-            c.filters([Kinetic.Filters.RGB]);
             c.red(100);
             piecesLayer.draw();
           } 
@@ -301,8 +300,7 @@ function loadPieces(p) {
       //white pieces
     else if(p == "White")
     {
-        console.log("White is loaded");
-          for(var i=0 ; i<4 ;i++){
+          for(var i=0 ; i<9 ;i++){
             var c = new Kinetic.Image ({
             image: w_piece,
             x: originalXPosW-piece_radius,
@@ -314,7 +312,6 @@ function loadPieces(p) {
             groupW.push(c);
             piecesLayer.add(c);
             c.cache();
-            c.filters([Kinetic.Filters.RGB]);
             c.red(100);
           } 
           piecesLayer.draw();
@@ -348,16 +345,6 @@ function loadPieces(p) {
             dragStartF(piece);
             
         });
-        /*piecesLayer.on('click', function(evt) {
-            if(state == "move_state"){
-                var piece = evt.target;
-                piece.size({ width:70, height:70});
-                piecesLayer.draw();
-                console.log(piece.width());
-                //dragStartF(piece);
-            }
-            
-        });*/
         function dragEndF(piece)
         {
             if(state == "fill_state"){
@@ -432,23 +419,16 @@ function loadPieces(p) {
             var piece = evt.target;
             dragEndF(piece);
         });
-        /*stage.on('click', function(evt) {
-            console.log(stage.getPointerPosition());
-            //dragEndF();
-        });*/
     var pstate = state;
     function setRemoveState(color)
     {
+        gameConsole("Remove"+color);
         pstate = state;
         // do action to show what you could remove
         if(color == "Black")
             group = groupBInBoard;
         else
             group = groupWInBoard;
- 
-            for(var k in group){
-                console.log(group[k].name());
-            }
 
             
         removeDraggable(turn);
@@ -462,29 +442,23 @@ function loadPieces(p) {
             if(piece.name() == color && piece.id() != 0)
             {
                 unsetRemoveState();
-                console.log(piece.id()+" Was removed");
                 outlines[piece.id()].filled = false;
                 outlines[piece.id()].fill_color = null;
                 var index = group.indexOf(piece);
                 group.splice(index, 1);
-
-                for(var k in group){
-                console.log(group[k].id()+" - "+group[k].name());
-                }
                 piece.destroy();
                 // check for winning 
                 if(groupW.length+groupWInBoard.length <3)
                 {
-                    winning("Black","All piece of player2 was removed");
+                    winning("Black","All piece of White was removed");
                 }
                 else if(groupB.length+groupBInBoard.length <3)
                 {
-                    winning("White","All piece of player1 was removed");
+                    winning("White","All piece of Black was removed");
                 }
                 state = pstate;
                 setDraggable(turn);
-                console.log(pstate);
-                
+                gameConsole("Player "+turn+" Turn");
                 piecesLayer.off('click.event1');
                 outlinesLayer.listening(true);
                 piecesLayer.draw();
@@ -498,13 +472,12 @@ function loadPieces(p) {
     }
     function winning(p,reason)
     {
-        console.log("Player won: "+p);
+        gameConsole("Player won: "+p);
         layer.listening(false);
         piecesLayer.listening(false);
         outlinesLayer.listening(false);
         score[p] = score[p]+1;
         document.getElementById("playerScore").innerHTML = score['Black']+" - "+score['White']+"<br/>";
-        console.log(score[p]);
         var winningLayer = new Kinetic.Layer();
         var rematchLayer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
@@ -587,6 +560,7 @@ function loadPieces(p) {
         
     }
     function removeDraggable(t){
+        
         if(t == "Black" && state == "move_state")
         {
             for(var k in groupBInBoard)
@@ -636,14 +610,16 @@ function loadPieces(p) {
             document.getElementById("player1").style.fontWeight = "bold";
             document.getElementById("player2").style.color = "gray";
             document.getElementById("player2").style.fontWeight = "normal";
-            document.getElementById("player2").innerHTML = "Player2<br/>x"+groupW.length;
+            document.getElementById("player2").innerHTML = "White<br/>x"+groupW.length;
+            gameConsole("Player Black Turn");
         }
         if(turn == "Black"){
             document.getElementById("player2").style.color = "green";
             document.getElementById("player2").style.fontWeight = "bold";
             document.getElementById("player1").style.color = "gray";
             document.getElementById("player1").style.fontWeight = "normal";
-            document.getElementById("player1").innerHTML = "Player1<br/>x"+groupB.length;
+            document.getElementById("player1").innerHTML = "Black<br/>x"+groupB.length;
+            gameConsole("Player White Turn");
         }
         if(state == "fill_state"){
             if(turn == "Black"){
@@ -670,7 +646,6 @@ function loadPieces(p) {
                         var o = groupB[k];
                         o.setDraggable(true);
                     }
-                    console.log(groupB.length);
                 if(groupB.length == 0)
                 {
                     state = "move_state";
@@ -713,9 +688,9 @@ function loadPieces(p) {
         if(!hasPossibleMoves(turn))
             {
                 if(turn == "Black")
-                    winning("White","No possible moves for Player1");
+                    winning("White","No possible moves for Black");
                 else
-                    winning("Black","No possible moves for Player2");
+                    winning("Black","No possible moves for White");
                 return;
             }
         }

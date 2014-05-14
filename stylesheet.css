@@ -4,13 +4,14 @@
 	width:600px;
 	height:700px;
 	margin: 0px auto;
-    margin-top: 20px;
+    margin-top: 0px;
 	position:absolute;
+    display: none;
 }
 body {
 	width:600px;
 	margin: 0px auto;
-	background-color: #e2f0ed;
+	background-color: #eef5f3;
 }
 .p {
 	display: inline;
@@ -67,7 +68,7 @@ body {
 	font-style:normal;
 	height:55px;
 	line-height:55px;
-	width:131px;
+	width:130px;
 	text-decoration:none;
 	text-align:center;
 	text-shadow:1px 1px 0px #aade7c;
@@ -84,7 +85,7 @@ body {
 .game_content {
     position: relative;
     float: left;
-    top: 630px;
+    top: 610px;
     left: 0px;
     width: 600;
     height: 80;
@@ -109,4 +110,70 @@ body {
     float:left;
     width: 100px;
     text-align: center;
+}
+
+.game_button {
+    position: relative;
+    float: left;
+    top: 610px;
+    left: 235px;
+    width: 500;
+    height: 80;
+    font-weight: bold;
+	color: green;   
+    text-align: center;
+}
+
+.console {
+    padding-left: 40px;
+    text-align: left;
+    color: #838383;
+    font-size: 18px;
+}
+
+.rules {
+    float: right;
+    margin-right: 20px; 
+}
+
+.rules:hover {
+    color: green;
+}
+
+#rulesText {
+    padding-right: 30px;
+    padding-left: 30px;
+    position: relative;
+    top:650px;
+    float: left;
+    display: none;
+    font-size: 20px;
+}
+
+.rules a {
+    color: inherit;
+    text-decoration: none;
+}
+
+#rulesText a {
+    color: green;
+    text-decoration: none;
+}
+
+#rulesText a:hover {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+span {
+    font-weight: bold; 
+}
+
+#loader {
+    right: 270px;
+    top: 150px;
+    text-align: center;
+    position: relative;
+    float: right;
+    display: block;
 }

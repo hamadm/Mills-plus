@@ -4,27 +4,44 @@
 <title>Mills-Plus</title>
 <meta name="viewport" content="width=device-width, user-scalable=no">
 <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
-<script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v5.1.0.min.js"></script>
+<script type="text/javascript">
+function displayBoard(){
+    document.getElementById("loader").style.display ='none';
+    document.getElementById("container").style.display ='block';
+}
+</script>
 </head>
-<body>
-
+<body onload="displayBoard()">
+<script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v5.1.0.min.js"></script>
 <script type="text/javascript" src="script.js" defer="defer"></script>
 <script type="text/javascript" src="game.js" defer="defer"></script>
-</body>
+<script type="text/javascript" >
+    function showRules(){
+            document.getElementById("rulesText").style.display ='block';
+    }   
+    function hideRules(){
+            document.getElementById("rulesText").style.display = 'none';
+    }   
+</script>
+<div class="console">&gt; <p class="p" id="consoleText">Start filling the board</p><div class="rules" ><a  onclick="showRules();" href="#rulesText">See Game Rules?</a></div></div>
 
 <div class ="game_content">
-<div class="player1info"><p class="p" id="player1">Player1<br/>x9</p></div>
+<div class="player1info"><p class="p" id="player1">Black<br/>x9</p></div>
 <div class="restart_content">
 <p class="p" id="score">Score<br/></p>
 <p class="p" id="playerScore">0 - 0<br/></p>
-    <a href="#" onclick="restart()" class="restart">Restart</a>
 </div>
 
 
-<div class="player2info"><p class="p" id="player2">Player2<br/>x9</p></div>
+<div class="player2info"><p class="p" id="player2">White<br/>x9</p></div>
 </div>
+<div id="loader"><img src="img/loader.gif"/><p>Game is Loading</p></div>
 <div id="container"></div>
 
-
+<div class ="game_button"><a href="#" onclick="restart()" class="restart">Restart</a></div>
+    <footer id="rulesText"><a onclick="hideRules();" href="#">Hide Rules</a> <br/><span>Rules are:</span> the purpose of this game is to continue a line of three pieces<br/>
+    dsafhjkdhdjkdgakjdfadskjgaskljglasdkgdsaklflsfsadgklgasfdgd<br/>
+    sdk;fklagjdaslk;gakgdjs;lkgsadjdflkdshflksdahg gsd gjdsaklgj sdkl jsadlgkjds gdsg dgd</footer>
+</body>
 
 </html>

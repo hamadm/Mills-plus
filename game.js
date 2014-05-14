@@ -40,19 +40,14 @@ function checkFields(name)
 	for(var key in playing_lines){
     	if(playing_lines[key].p1.fill_color == name &&
     	 playing_lines[key].p2.fill_color == name && playing_lines[key].p3.fill_color == name ){
-            console.log(key+" - ");
 
             if(playing_lines[key].p1.fill_color == 'Black' && !playing_lines[key].isFilledByPlayer1 ){
-                console.log(key+" - before - "+playing_lines[key].isFilledByPlayer1);
                 playing_lines[key].isFilledByPlayer1 = true;
-                console.log(key+" - after - "+playing_lines[key].isFilledByPlayer1);
                 lines[key].stroke('blue');
                 setRemoveState("White");
             }
             else if(playing_lines[key].p1.fill_color == 'White' && !playing_lines[key].isFilledByPlayer2 ){
-                console.log("2 - before - "+playing_lines[key].isFilledByPlayer2);
                 playing_lines[key].isFilledByPlayer2 = true;
-                console.log("2 - after - "+playing_lines[key].isFilledByPlayer2);
                 lines[key].stroke('red');
                 setRemoveState("Black");
             }
@@ -60,24 +55,13 @@ function checkFields(name)
             layer.draw();
     	}
     }
-    console.log("---"+(groupW.length+groupWInBoard.length)+"---");
-    // check for winning 
-    if(groupW.length+groupWInBoard.length <3)
-    {
-        console.log("Player1 won (Black)");
-    }
-    else if(groupB.length+groupBInBoard.length <3)
-    {
-        console.log("Player2 won (White)");
-    }
+
 }
 
 function isValidMove(piece, target){
 
 for(var key in playing_lines){
-    //console.log(playing_lines[key].p1);
-    //console.log(outlines[piece.id()]);
-    //console.log(key);
+
     if(playing_lines[key].p1 == outlines[piece.id()] && playing_lines[key].p2 == target)
         return true;
     if(playing_lines[key].p3 == outlines[piece.id()] && playing_lines[key].p2 == target)
@@ -102,13 +86,10 @@ function printPossibleMoves(player)
     else{
         possible_Moves = possible_Moves_W;
     }
-    for(var i in possible_Moves)
-        console.log(i+"- From: X:"+possible_Moves[i].from.x + "Y:"+possible_Moves[i].from.y+" , To: X:"+possible_Moves[i].to.x + "Y:"+possible_Moves[i].to.y);
 }
 function hasPossibleMoves(player)
 {
     fillPossibleMoves(player);
-    console.log("//////// checking for possible moves //////////");
     printPossibleMoves(player);
     if(player =="Black" && possible_Moves_B.length == 0)
         return false;
@@ -119,7 +100,6 @@ function hasPossibleMoves(player)
 function fillPossibleMoves(player)
 {
     var possible_Moves = [];
-    console.log("Player: "+player);
     var group;
     if(player == "Black"){
         group = groupBInBoard;
@@ -134,31 +114,25 @@ function fillPossibleMoves(player)
     for(var key in group)
     {
         var piece = group[key];
-        console.log("piece: "+piece+" At: "+piece.id());
         
         for(var k in playing_lines)
         {
-            console.log("Line: "+k);
             if(playing_lines[k].p1 == outlines[piece.id()]){
-                console.log("p1: "+ piece.id());
                 if(!playing_lines[k].p2.filled)
                     possible_Moves.push(new possibleMove(playing_lines[k].p1,playing_lines[k].p2));
             }
             else if(playing_lines[k].p2 == outlines[piece.id()])
             {
-                console.log("p2: "+ piece.id());
                 if(!playing_lines[k].p1.filled)
                     possible_Moves.push(new possibleMove(playing_lines[k].p2,playing_lines[k].p1));
                 if(!playing_lines[k].p3.filled)
                     possible_Moves.push(new possibleMove(playing_lines[k].p2,playing_lines[k].p3));
             }
             else if(playing_lines[k].p3 == outlines[piece.id()]){
-                console.log("p1: "+ piece.id());
                 if(!playing_lines[k].p2.filled)
                     possible_Moves.push(new possibleMove(playing_lines[k].p3,playing_lines[k].p2));
             }
         }
     }
-    console.log("Finished");
     
 }
