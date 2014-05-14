@@ -177,3 +177,21 @@ span {
     float: right;
     display: block;
 }
+.github {
+    padding-right: 30px;
+    padding-left: 30px;
+    position: relative;
+    top:680px;
+    left: 70px;
+    float: left;
+    font-size: 15px;
+}
+.github a {
+    color: gray;
+    text-decoration: none;
+}
+
+.github a:hover {
+    color: green;
+    text-decoration: none;
+}
