@@ -51,7 +51,8 @@ function checkFields(name)
                 lines[key].stroke('red');
                 setRemoveState("Black");
             }
-
+            if(playing_lines[key].isFilledByPlayer2 && playing_lines[key].isFilledByPlayer1)
+                lines[key].stroke('gray');
             layer.draw();
     	}
     }

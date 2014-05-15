@@ -2,7 +2,8 @@ function restart()
 {
     // reset logic 
     turn = "Black";
-    state = "fill_state"
+    state = "fill_state";
+
     var possible_Moves_B = []; 
     var possible_Moves_W = []; 
     for(var key in playing_lines)
@@ -10,7 +11,6 @@ function restart()
         playing_lines[key].isFilledByPlayer1 = false;
         playing_lines[key].isFilledByPlayer2 = false;
     }
-
     // reset document 
     document.getElementById("player1").style.color = "green";
     document.getElementById("player1").style.fontWeight = "bold";
@@ -97,6 +97,9 @@ function gameConsole(str){
     // creating the layer of the board that has the lines and outlines
     var layer = new Kinetic.Layer(); 
 
+    document.getElementById("restart").onclick =  function() {
+            restart();
+    }
 
 
     var lines = {};
@@ -553,6 +556,16 @@ function loadPieces(p) {
             rematchLayer.destroy();
             restart();
         });
+        document.getElementById("restart").onclick =  function() {
+            layer.listening(true);
+            piecesLayer.listening(true);
+            outlinesLayer.listening(true);
+            piecesLayer.off('click.event2');
+            winningLayer.destroy();
+            rematchLayer.destroy();
+            restart();
+        }
+
     }
     function unsetRemoveState()
     {
