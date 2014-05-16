@@ -11,3 +11,6 @@ The game consist of two phases:
 1- Placing the pieces: The players place their pieces in the intersections of the one after the other until the board is full. If a player could form a straight line, he can remove any piece of the other player that is in the board.
 
 2- Moving the pieces: After all the pieces have been placed the players start moving the pieces in adjacent intersection point in the line. When a player have three pieces in a line he will be able to remove one any of the opponent pieces. And after creating a three in a line the player wouldnâ€™t be able to do the same line again throughout all the rest of the game. The game ends if the player has only two pieces or he has no moves. 
+
+
+or check out the mills real rules: http://en.wikipedia.org/wiki/Nine_Men's_Morris
