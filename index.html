@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Mills-Plus</title>
-<meta name="viewport" content="width=device-width, user-scalable=no">
+<meta name="viewport" content="width=610">
 <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
 <script type="text/javascript">
 function displayBoard(){
@@ -23,8 +23,9 @@ function displayBoard(){
             document.getElementById("rulesText").style.display = 'none';
     }   
 </script>
+<div class="content">
 <div class="console">&gt; <p class="p" id="consoleText">Start filling the board</p><div class="rules" ><a  onclick="showRules();" href="#rulesText">See Game Rules?</a></div></div>
-
+<div id="container"></div>
 <div class ="game_content">
 <div class="player1info"><p class="p" id="player1">Black<br/>x9</p></div>
 <div class="restart_content">
@@ -36,7 +37,7 @@ function displayBoard(){
 <div class="player2info"><p class="p" id="player2">White<br/>x9</p></div>
 </div>
 <div id="loader"><img src="img/loader.gif"/><p>Game is Loading</p></div>
-<div id="container"></div>
+
 
 <div class ="game_button"><a href="#" class="restart" id="restart">Restart</a></div>
 <div class ="github"><a href="https://github.com/hamadm/Mills-plus">Devolpers GitHub page </a></div>
@@ -46,6 +47,7 @@ The game consist of two phases:<br/>
 1- Placing the pieces: The players place their pieces in the intersections of the one after the other until the board is full. If a player could form a straight line, he can remove any piece of the other player that is in the board.<br/>
 2- Moving the pieces: After all the pieces have been placed the players start moving the pieces in adjacent intersection point in the line. When a player have three pieces in a line he will be able to remove one any of the opponent pieces. And after creating a three in a line the player wouldn’t be able to do the same line again throughout all the rest of the game. The game ends if the player has only two pieces or he has no moves. <br/><br/>For more check out the <a href="https://github.com/hamadm/Mills-plus">Devolpers GitHub page </a>
 </footer>
+</div>
 
 </body>
 

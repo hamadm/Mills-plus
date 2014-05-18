@@ -224,7 +224,7 @@ function gameConsole(str){
         outlinesLayer.draw();
         outlinesLayer.add(c);
     }
-    outlinesLayer.on('click',function(evt){
+    outlinesLayer.on('click or touchend',function(evt){
         if(state == "fill_state")
             addInFill(turn,evt.target.id())
 
@@ -438,7 +438,7 @@ function loadPieces(p) {
         piecesLayer.draw();
         state = "remove_state";
         outlinesLayer.listening(false);
-        piecesLayer.on('click', function(evt) {
+        piecesLayer.on('click or touchend', function(evt) {
         if(state == "remove_state")
         {
             var piece = evt.target;
@@ -547,11 +547,11 @@ function loadPieces(p) {
         rematchLayer.draw();
         stage.add(winningLayer);
         stage.add(rematchLayer);
-        rematchLayer.on('click.event2',function(){
+        rematchLayer.on('click.event2 or touchend.event2',function(){
             layer.listening(true);
             piecesLayer.listening(true);
             outlinesLayer.listening(true);
-            piecesLayer.off('click.event2');
+            piecesLayer.off('click.event2 or touchend.event2');
             winningLayer.destroy();
             rematchLayer.destroy();
             restart();

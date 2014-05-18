@@ -1,11 +1,10 @@
 #container {
 	background-image: url("img/board-bg.png");
 	background-repeat: no-repeat;
-	width:600px;
-	height:700px;
-	margin: 0px auto;
+	height:600px;
+	margin: 0px 0px;
     margin-top: 0px;
-	position:absolute;
+	position: absolute;
     display: none;
 }
 body {
@@ -92,6 +91,7 @@ body {
     font-weight: bold;
 	color: green;   
     text-align: center;
+    z-index: -1;
 }
 
 .player1info {
@@ -126,9 +126,10 @@ body {
 
 .console {
     padding-left: 40px;
-    text-align: left;
     color: #838383;
     font-size: 18px;
+    padding-top: 10px;
+    padding-bottom: 6px;
 }
 
 .rules {
@@ -179,12 +180,12 @@ span {
 }
 .github {
     padding-right: 30px;
-    padding-left: 30px;
+    padding-left: 22px;
     position: relative;
-    top:680px;
+    top: 685px;
     left: 70px;
     float: left;
-    font-size: 15px;
+    font-size: 17px;
 }
 .github a {
     color: gray;
